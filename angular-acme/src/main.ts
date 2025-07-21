@@ -14,13 +14,10 @@ import { routes } from './app/app.routes';
     <div class="min-h-screen bg-gray-100">
       <router-outlet></router-outlet>
     </div>
-  `
+  `,
 })
 export class App {}
 
 bootstrapApplication(App, {
-  providers: [
-    provideRouter(routes),
-    provideHttpClient()
-  ]
+  providers: [provideRouter(routes), provideHttpClient()],
 });

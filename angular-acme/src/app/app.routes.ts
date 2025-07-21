@@ -5,5 +5,5 @@ import { UserDetailsComponent } from './components/user-details/user-details.com
 export const routes: Routes = [
   { path: '', component: UserTableComponent },
   { path: 'user/:id', component: UserDetailsComponent },
-  { path: '**', redirectTo: '' }
+  { path: '**', redirectTo: '' },
 ];

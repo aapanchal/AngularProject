@@ -2,15 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 
-export interface UserData {
-  [key: string]: any;
-}
+export type UserData = Record<string, any>;
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
-  private readonly apiUrl = 'https://microsoftedge.github.io/Demos/json-dummy-data/64KB.json';
+  private readonly apiUrl =
+    'https://microsoftedge.github.io/Demos/json-dummy-data/64KB.json';
   private usersSubject = new BehaviorSubject<UserData[]>([]);
   public users$ = this.usersSubject.asObservable();
 
@@ -28,18 +27,18 @@ export class UserService {
       error: (error) => {
         console.error('Error fetching users:', error);
         this.usersSubject.next([]);
-      }
+      },
     });
   }
 
   getUserById(id: string): UserData | undefined {
     const users = this.usersSubject.value;
-    return users.find(user => user['id']?.toString() === id);
+    return users.find((user) => user['id']?.toString() === id);
   }
 
   updateUser(updatedUser: UserData): void {
     const users = this.usersSubject.value;
-    const index = users.findIndex(user => user['id'] === updatedUser['id']);
+    const index = users.findIndex((user) => user['id'] === updatedUser['id']);
     if (index !== -1) {
       users[index] = { ...users[index], ...updatedUser };
       this.usersSubject.next([...users]);
@@ -48,13 +47,13 @@ export class UserService {
 
   getTableHeaders(users: UserData[]): string[] {
     if (users.length === 0) return [];
-    
+
     // Get all unique keys from all objects
     const allKeys = new Set<string>();
-    users.forEach(user => {
-      Object.keys(user).forEach(key => allKeys.add(key));
+    users.forEach((user) => {
+      Object.keys(user).forEach((key) => allKeys.add(key));
     });
-    
+
     return Array.from(allKeys);
   }
 }
