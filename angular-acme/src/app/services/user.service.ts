@@ -1,8 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
+import { inject as ngInject } from '@angular/core';
 
-export type UserData = Record<string, any>;
+export interface UserData {
+  id: string | number;
+  name?: string;
+  email?: string;
+  // Add other fields as needed based on your data structure
+  [key: string]: unknown;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +20,7 @@ export class UserService {
   private usersSubject = new BehaviorSubject<UserData[]>([]);
   public users$ = this.usersSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  private http: HttpClient = inject(HttpClient);
 
   fetchUsers(): Observable<UserData[]> {
     return this.http.get<UserData[]>(this.apiUrl);
@@ -56,4 +63,9 @@ export class UserService {
 
     return Array.from(allKeys);
   }
+}
+import { Type } from '@angular/core';
+
+function inject<T>(token: Type<T>): T {
+  return ngInject(token);
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @angular-eslint/prefer-inject */
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -48,11 +49,11 @@ import { UserService, UserData } from '../../services/user.service';
         <div class="p-6">
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div *ngFor="let field of getFieldKeys()" class="space-y-2">
-              <label
+              <span
                 class="text-sm font-medium text-gray-500 uppercase tracking-wider"
               >
                 {{ formatFieldName(field) }}
-              </label>
+              </span>
               <div class="p-3 bg-gray-50 rounded-lg border">
                 <span class="text-gray-900 font-medium">
                   {{ formatFieldValue(user[field]) }}
@@ -129,7 +130,7 @@ export class UserDetailsComponent implements OnInit {
     ];
     for (const field of nameFields) {
       if (this.user[field]) {
-        return this.user[field];
+        return String(this.user[field]);
       }
     }
 
@@ -157,7 +158,7 @@ export class UserDetailsComponent implements OnInit {
       .trim();
   }
 
-  formatFieldValue(value: any): string {
+  formatFieldValue(value: unknown): string {
     if (value === null || value === undefined) return 'Not specified';
     if (typeof value === 'boolean') return value ? 'Yes' : 'No';
     if (typeof value === 'object') {
@@ -170,7 +171,7 @@ export class UserDetailsComponent implements OnInit {
     if (typeof value === 'string' && value.length > 100) {
       return value.substring(0, 100) + '...';
     }
-    return value.toString();
+    return String(value);
   }
 
   goBack(): void {

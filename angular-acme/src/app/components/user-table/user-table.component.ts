@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -174,10 +174,8 @@ export class UserTableComponent implements OnInit, OnDestroy {
   isEditing = false;
   private destroy$ = new Subject<void>();
 
-  constructor(
-    private userService: UserService,
-    private router: Router,
-  ) {}
+  userService = inject(UserService);
+  router = inject(Router);
 
   ngOnInit(): void {
     this.userService.users$
@@ -195,8 +193,8 @@ export class UserTableComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  trackByUserId(index: number, user: UserData): any {
-    return user['id'] || index;
+  trackByUserId(index: number, user: UserData): number | string {
+    return user['id'] ?? index;
   }
 
   navigateToDetails(user: UserData): void {
@@ -237,8 +235,9 @@ export class UserTableComponent implements OnInit, OnDestroy {
     this.isEditing = false;
   }
 
-  updateField(user: UserData, field: string, event: any): void {
-    user[field] = event.target.value;
+  updateField(user: UserData, field: string, event: Event): void {
+    const input = event.target as HTMLInputElement;
+    user[field] = input.value;
   }
 
   isEditableField(field: string): boolean {
@@ -247,13 +246,13 @@ export class UserTableComponent implements OnInit, OnDestroy {
     return !nonEditableFields.includes(field);
   }
 
-  formatValue(value: any): string {
+  formatValue(value: unknown): string {
     if (value === null || value === undefined) return '-';
     if (typeof value === 'object') return JSON.stringify(value);
-    return value.toString();
+    return String(value);
   }
 
-  shouldTruncate(value: any): boolean {
+  shouldTruncate(value: unknown): boolean {
     const str = this.formatValue(value);
     return str.length > 50;
   }
